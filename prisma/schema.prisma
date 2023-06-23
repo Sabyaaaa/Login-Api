@@ -11,15 +11,92 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  email String @unique
-  hash  String
-
-  // ? denotes an optional field
-  firstName String?
-  lastName  String?
-
+  user_id            Int       @id @default(autoincrement())
+  account_id         String    @unique
+  name               String
+  phone              String    @unique
+  email              String    @unique
+  password           String
+  about              String?
+  portfolio          String
+  attach_photo       String?   @default("default.png")
+  street_Address     String?
+  city               String
+  state              String
+  postal_Code        Int
+  country            String
+  position_Last_Held String
+  company            String
+  start_date         DateTime  @default(now())
+  end_date           DateTime
+  // projects           Project[]
 }
+
+// model Project {
+//   project_id           Int      @id @default(autoincrement())
+//   project_code         String   @unique
+//   title                String
+//   project_scope        String
+//   requirements         String   @db.VarChar(1000)
+//   terms_and_conditions String   @db.VarChar(1000)
+//   total_fund           Float
+//   duration             DateTime
+//   deliverables         String
+//   category             String
+//   penalty              Float
+//   fund_transfer_type   String
+//   milestones           Milestone[]
+//   user                 User?    @relation(fields: [project_id], references: [user_id]) // Add this relation field
+// }
+
+// model Milestone {
+//   milestone_id          Int      @id @default(autoincrement())
+//   milestone_code        String   @unique
+//   description           String
+//   requirements          String
+//   funds_allocated       Float
+//   start_date            DateTime @default(now())
+//   acceptance_criteria   String
+//   completion_date       DateTime
+//   status                Status   @default(Inprogress)
+//   no_of_revision        Int
+//   penalty               Float
+//   description_file_hash String?
+//   description_file_link String?
+//   approved              Boolean  @default(false)
+//   closed                Boolean  @default(false)
+//   resolve_time          Int?
+//   revision_counter      Int      @default(0)
+//   project_id            Int
+//   user_id               Int
+
+//   // project Project @relation(fields: [milestone_id], references: [
+//   // project_id]) // Add this relation field
+// }
+
+enum Role {
+  PURCHASER
+  PROVIDER
+}
+
+enum Status {
+  Inprogress
+  Inreview
+  Completed
+  Rework
+  Forceclosed
+}
+
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+
+//   email String @unique
+//   hash  String
+
+//   // ? denotes an optional field
+//   firstName String?
+//   lastName  String?
+
+// }

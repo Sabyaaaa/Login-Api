@@ -15,26 +15,41 @@ export class AuthService {
         // generate the hashed password
         const hash = await argon.hash(dto.password);
         // save the new user in the database
-        try {
+        // try {
             const user = await this.prisma.user.create({
                 data: {
+                    name: dto.name,
+                    phone: dto.phone,
+                    account_id: dto.account_id,
                     email: dto.email,
-                    hash,
+                    password:hash,
+                    about: dto.about,
+                    portfolio: dto.portfolio,
+                    attach_photo: dto.attach_photo,
+                    street_Address: dto.street_Address,
+                    city: dto.city,
+                    state: dto.state,
+                    postal_Code: dto.postal_Code,
+                    country: dto.country,
+                    position_Last_Held: dto.position_Last_Held,
+                    company: dto.company,
+                    start_date: dto.start_date,
+                    end_date: dto.end_date
                 },
             });
 
             // delete user.hash;   // for now we just delete the hashed password as we don't want to display it
             // return the saved user
             // return user;
-            return this.signToken(user.id, user.email)
-        } catch (error) {
-            throw new HttpException({
-                status: HttpStatus.FORBIDDEN,
-                error: 'Credentials already taken',
-            }, HttpStatus.FORBIDDEN, {
-                cause: error
-            });
-        }
+            return this.signToken(user.user_id, user.email);
+        // } catch (error) {
+        //     throw new HttpException({
+        //         status: HttpStatus.FORBIDDEN,
+        //         error: 'Credentials already taken',
+        //     }, HttpStatus.FORBIDDEN, {
+        //         cause: error
+        //     });
+        // }
         // this catch is not working
         //  catch (error) {
         //     if (error instanceof PrismaClientKnownRequestError) {
@@ -61,7 +76,7 @@ export class AuthService {
             throw new ForbiddenException('Incorrect credentials');
 
         // compare password
-        const pwMatches = await argon.verify(user.hash, dto.password);
+        const pwMatches = await argon.verify(user.password, dto.password);
 
         // if password is incorrect throw exception
         if (!pwMatches)
@@ -72,7 +87,7 @@ export class AuthService {
         // return user; 
 
         // instead of returing a user, we return a token
-        return this.signToken(user.id, user.email)
+        return this.signToken(user.user_id, user.email)
     }
 
     async signToken(userId: number, email: string): Promise<{access_token: string}> {
